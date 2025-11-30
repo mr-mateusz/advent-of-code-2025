@@ -2,6 +2,7 @@ task.txt
 input.txt
 input[0-9].txt
 
+.idea
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
