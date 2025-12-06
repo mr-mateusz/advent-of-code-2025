@@ -57,7 +57,7 @@ if __name__ == '__main__':
             # Just a number
             value = int(row)
         operation_res = operation([operation_res, value])
-    if operation_res:
+    if operation_res is not None:
         total_sum += operation_res
 
     # Part 2
