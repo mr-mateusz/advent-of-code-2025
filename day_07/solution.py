@@ -1,3 +1,6 @@
+from functools import cache
+
+
 def find_start(data: list[list[str]]) -> tuple[int, int]:
     for row_idx, row in enumerate(data):
         for col_idx, value in enumerate(row):
@@ -29,6 +32,28 @@ def run_simulation(data: list[list[str]], start: tuple[int, int]) -> int:
     return n_splits
 
 
+def find_first_splitter(data: tuple[tuple[str]], start: tuple[int, int]) -> tuple[int, int] | None:
+    start_row_idx = start[0]
+    start_col_idx = start[1]
+    n_rows = len(data)
+    for row_idx in range(start_row_idx, n_rows):
+        if data[row_idx][start_col_idx] == '^':
+            return row_idx, start_col_idx
+    return None
+
+
+@cache
+def run_simulation_quantum(data: tuple[tuple[str]], start: tuple[int, int]) -> int:
+    splitter_pos = find_first_splitter(data, start)
+
+    if not splitter_pos:
+        return 1
+    else:
+        start_1 = splitter_pos[0], splitter_pos[1] - 1
+        start_2 = splitter_pos[0], splitter_pos[1] + 1
+        return run_simulation_quantum(data, start_1) + run_simulation_quantum(data, start_2)
+
+
 if __name__ == '__main__':
     path = 'input.txt'
 
@@ -39,3 +64,8 @@ if __name__ == '__main__':
 
     # part 1
     print(run_simulation(data, start))
+
+    data = tuple(tuple(row) for row in data)
+
+    # part 2
+    print(run_simulation_quantum(data, start))
