@@ -37,6 +37,24 @@ def connect_boxes(circuits: list[set[tuple]], distances: list[tuple[set, float]]
     return circuits
 
 
+def connect_all_boxes(circuits: list[set[tuple]], distances: list[tuple[set, float]]) -> tuple[tuple, tuple]:
+    circuits = circuits[:]
+    distances = distances[:]
+
+    for boxes, _ in distances:
+        box_1, box_2 = boxes
+        box_1_circuit = find_circuit(box_1, circuits)
+        box_2_circuit = find_circuit(box_2, circuits)
+        if box_1_circuit == box_2_circuit:
+            continue
+        circuits.remove(box_1_circuit)
+        circuits.remove(box_2_circuit)
+        circuits.append(box_1_circuit.union(box_2_circuit))
+
+        if len(circuits) == 1:
+            return box_1, box_2
+
+
 if __name__ == '__main__':
     path = 'input.txt'
 
@@ -58,4 +76,10 @@ if __name__ == '__main__':
 
     result = math.prod(top_3_sizes)
 
+    # Part 1
     print(result)
+
+    box_1, box_2 = connect_all_boxes(circuits, distances)
+
+    # Part 2
+    print(box_1[0] * box_2[0])
